@@ -53,8 +53,24 @@ const util = {
 const game = {
     init: function() {
         this.tablesDiv = document.getElementById('gameTables');
+        this.guessInput = document.getElementById('guessInput');
+        this.guessButton = document.getElementById('guessButton');
         this.gameState = new GameState(10);
         this.renderTables();
+    },
+    guess: function() {
+        const guess = this.guessInput.value;
+        if (guess.length === this.gameState.modulus) {
+            if (guess.toUpperCase() === this.gameState.mapping) {
+                this.guessInput.value = 'SOLVED';
+                this.guessInput.disabled = true;
+                this.guessButton.disabled = true;
+            } else {
+                this.guessInput.value = '';
+                this.incorrectGuesses++;
+                document.getElementById("guessCount").innerText = this.incorrectGuesses;
+            }
+        }
     },
     renderTables: function() {
         const mod = this.gameState.modulus;

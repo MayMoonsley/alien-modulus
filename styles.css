@@ -1,7 +1,20 @@
+html {
+    font-family: monospace;
+}
+
+h1, #guessDisplay {
+    text-align: center;
+}
+
+#gameTables, #guess {
+    display: flex;
+    justify-content: center;
+}
+
 table {
     border: 2px solid black;
-    font-family: monospace;
     font-size: 18px;
+    margin: 8px;
 }
 
 table tr:nth-child(2n + 1) *:nth-child(2n + 1) {
@@ -9,7 +22,7 @@ table tr:nth-child(2n + 1) *:nth-child(2n + 1) {
 }
 
 table tr:nth-child(2n + 1) *, table tr *:nth-child(2n + 1) {
-    background: #dddddd;
+    background: #dcdcdc;
 }
 
 table td, table th {
