@@ -19,10 +19,26 @@ const util = {
         }
         return r;
     },
-    table: (width, height, func) => {
+    table: (width, height, func, colHeads, rowHeads) => {
         const table = document.createElement('table');
+        const header = document.createElement('tr');
+        for (let x = -1; x < width; x++) {
+            const th = document.createElement('th');
+            th.scope = 'col';
+            if (x === -1) {
+                th.innerHTML = '×';
+            } else {
+                th.innerHTML = colHeads[x];
+            }
+            header.appendChild(th);
+        }
+        table.appendChild(header);
         for (let y = 0; y < height; y++) {
             const row = document.createElement('tr');
+            const th = document.createElement('th');
+            th.scope = 'row';
+            th.innerHTML = rowHeads[y];
+            row.appendChild(th);
             for (let x = 0; x < width; x++) {
                 const cell = document.createElement('td');
                 cell.innerText = func(x, y);
@@ -38,10 +54,19 @@ const game = {
     init: function() {
         this.tablesDiv = document.getElementById('gameTables');
         this.gameState = new GameState(10);
-        this.tablesDiv.appendChild(util.table(10, 10, (a, b) => (a * b) % 10));
-        this.tablesDiv.appendChild(util.table(10, 10, (a, b) => {
+        this.renderTables();
+    },
+    renderTables: function() {
+        const mod = this.gameState.modulus;
+        const nums = util.generate(mod, i => i);
+        this.tablesDiv.innerHTML = '';
+        this.tablesDiv.appendChild(util.table(
+            mod, mod,
+            (a, b) => (a * b) % mod, nums, nums
+        ));
+        this.tablesDiv.appendChild(util.table(mod, mod, (a, b) => {
             return this.gameState.multiplyStr(this.gameState.chars[a], this.gameState.chars[b]);
-        }));
+        }, this.gameState.chars, this.gameState.chars));
     }
 };
 
@@ -64,7 +89,7 @@ GameState.prototype.multiplyNum = function(a, b) {
 }
 
 GameState.prototype.multiplyStr = function(a, b) {
-    return this.chars[this.multiplyNum(a, b)];
+    return this.mapping[this.multiplyNum(a, b)];
 }
 
 const G = new GameState(10);
