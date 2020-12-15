@@ -55,7 +55,17 @@ const game = {
         this.tablesDiv = document.getElementById('gameTables');
         this.guessInput = document.getElementById('guessInput');
         this.guessButton = document.getElementById('guessButton');
-        this.gameState = new GameState(10);
+        this.newGameInput = document.getElementById('modInput');
+        this.newGame(10);
+    },
+    newGame: function(mod) {
+        if (mod === undefined) {
+            mod = this.newGameInput.value;
+        }
+        this.gameState = new GameState(mod);
+        this.guessInput.value = '';
+        this.guessInput.disabled = false;
+        this.guessButton.disabled = false;
         this.renderTables();
     },
     guess: function() {

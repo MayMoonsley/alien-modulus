@@ -6,7 +6,7 @@ h1, #guessDisplay {
     text-align: center;
 }
 
-#gameTables, #guess {
+#gameTables, #guess, #newGame {
     display: flex;
     justify-content: center;
 }
