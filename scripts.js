@@ -60,7 +60,7 @@ const game = {
     },
     newGame: function(mod) {
         if (mod === undefined) {
-            mod = this.newGameInput.value;
+            mod = parseInt(this.newGameInput.value);
         }
         this.gameState = new GameState(mod);
         this.guessInput.value = '';
