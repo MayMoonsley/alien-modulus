@@ -8,13 +8,13 @@
         <h1>Alien Modulus</h1>
         <div id="gameTables"></div>
         <h2 id="guessDisplay">Incorrect Guesses: <span id="guessCount">0</span></h2>
-        <div id="guess">
-            <input type="text" id="guessInput">
-            <button type="button" onclick="game.guess()" id="guessButton">Guess</button>
-        </div>
         <div id="newGame">
             <input type="number" id="modInput" value="10" step="1" min="4">
             <button type="button" onclick="game.newGame()" id="newGameButton">New Game</button>
+        </div>
+        <div id="guess">
+            <input type="text" id="guessInput">
+            <button type="button" onclick="game.guess()" id="guessButton">Guess</button>
         </div>
         <script src="scripts.js"></script>
     </body>

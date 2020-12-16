@@ -6,9 +6,28 @@ h1, #guessDisplay {
     text-align: center;
 }
 
-#gameTables, #guess, #newGame {
+#gameTables, #newGame {
     display: flex;
     justify-content: center;
+}
+
+#guess {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    margin: 0 auto;
+}
+
+#guess p {
+    font-weight: bold;
+}
+
+#guess div {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid black;
+    padding: 4px;
+    margin: 4px;
 }
 
 table {

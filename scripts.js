@@ -53,9 +53,9 @@ const util = {
 const game = {
     init: function() {
         this.tablesDiv = document.getElementById('gameTables');
-        this.guessInput = document.getElementById('guessInput');
-        this.guessButton = document.getElementById('guessButton');
+        this.guessDiv = document.getElementById('guess');
         this.newGameInput = document.getElementById('modInput');
+        this.guessDisplay = document.getElementById('guessCount');
         this.newGame(10);
     },
     newGame: function(mod) {
@@ -63,23 +63,20 @@ const game = {
             mod = parseInt(this.newGameInput.value);
         }
         this.gameState = new GameState(mod);
-        this.guessInput.value = '';
-        this.guessInput.disabled = false;
-        this.guessButton.disabled = false;
+        this.setIncorrect(0);
         this.renderTables();
+        this.renderGuessNodes();
     },
-    guess: function() {
-        const guess = this.guessInput.value;
-        if (guess.length === this.gameState.modulus) {
-            if (guess.toUpperCase() === this.gameState.mapping) {
-                this.guessInput.value = 'SOLVED';
-                this.guessInput.disabled = true;
-                this.guessButton.disabled = true;
-            } else {
-                this.guessInput.value = '';
-                this.incorrectGuesses++;
-                document.getElementById("guessCount").innerText = this.incorrectGuesses;
-            }
+    setIncorrect: function(x) {
+        this.incorrectGuesses = x;
+        this.guessDisplay.innerText = x;
+    },
+    guess: function(num, char) {
+        if (this.gameState.mapping[num] === char) {
+            return true;
+        } else {
+            this.setIncorrect(this.incorrectGuesses + 1);
+            return false;
         }
     },
     renderTables: function() {
@@ -93,6 +90,39 @@ const game = {
         this.tablesDiv.appendChild(util.table(mod, mod, (a, b) => {
             return this.gameState.multiplyStr(this.gameState.chars[a], this.gameState.chars[b]);
         }, this.gameState.chars, this.gameState.chars));
+    },
+    renderGuessNodes: function() {
+        this.guessDiv.innerHTML = '';
+        for (let i = 0; i < this.gameState.modulus; i++) {
+            this.guessDiv.appendChild(this.renderGuessNode(i));
+        }
+    },
+    renderGuessNode: function(num) {
+        const node = document.createElement('div');
+        const label = document.createElement('p');
+        label.innerText = `${this.gameState.chars[num]} = `;
+        const input = document.createElement('input');
+        input.type = 'number';
+        input.min = 0;
+        input.max = this.gameState.modulus - 1;
+        input.size = 3;
+        label.appendChild(input);
+        node.appendChild(label);
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.innerText = 'Guess';
+        button.onclick = function() {
+            const right = game.guess(parseInt(input.value), game.gameState.chars[num]);
+            if (right) {
+                this.disabled = true;
+                input.disabled = true;
+                label.appendChild(document.createTextNode(' ✓'));
+            } else {
+                input.value = '';
+            }
+        };
+        node.appendChild(button);
+        return node;
     }
 };
 
