@@ -73,6 +73,9 @@ const game = {
     },
     guess: function(num, char) {
         if (this.gameState.mapping[num] === char) {
+            this.gameState.known.push(num);
+            this.gameState.known.push(char);
+            this.renderTables();
             return true;
         } else {
             this.setIncorrect(this.incorrectGuesses + 1);
@@ -89,7 +92,7 @@ const game = {
         ));
         this.tablesDiv.appendChild(util.table(mod, mod, (a, b) => {
             return this.gameState.multiplyStr(this.gameState.chars[a], this.gameState.chars[b]);
-        }, this.gameState.chars, this.gameState.chars));
+        }, this.gameState.displayChars(), this.gameState.displayChars()));
     },
     renderGuessNodes: function() {
         this.guessDiv.innerHTML = '';
@@ -128,10 +131,10 @@ const game = {
 
 function GameState(modulus) {
     this.modulus = modulus;
-    this.incorrectGuesses = 0;
+    this.known = [];
     const chars = util.generate(modulus, i => String.fromCharCode(i + 65));
-    this.chars = chars.join('');
-    this.mapping = util.shuffle(chars).join('');
+    this.chars = chars;
+    this.mapping = util.shuffle(chars);
 }
 
 GameState.prototype.multiplyNum = function(a, b) {
@@ -145,7 +148,15 @@ GameState.prototype.multiplyNum = function(a, b) {
 }
 
 GameState.prototype.multiplyStr = function(a, b) {
-    return this.mapping[this.multiplyNum(a, b)];
+    const num = this.multiplyNum(a, b);
+    if (this.known.includes(num)) {
+        return num;
+    }
+    return this.mapping[num];
+}
+
+GameState.prototype.displayChars = function() {
+    return this.chars.map(a => this.known.includes(a) ? this.mapping.indexOf(a) : a);
 }
 
 const G = new GameState(10);
